@@ -4,117 +4,102 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bistro Babushka</title>
-    <style>
-        body {
-            font-family: sans-serif;
-        }
-
-        img {
-            width: 100%;
-        }
-
-        #main {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            grid-gap: 1em;
-            margin: 2em;
-        }
-
-
-
-        .valgt {
-            background-color: aqua;
-        }
-
-    </style>
+    <title></title>
+    <link rel="stylesheet" href="">
 </head>
 
+<style>
+    img {
+        max-width: 100%;
+    }
+
+    section {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        grid-gap: 1rem;
+    }
+
+</style>
+
 <body>
-    <nav>
-        <header>
-            <h1>Overskrift</h1>
-        </header>
-        <button data-bistro="alle">Alle</button>
-        <button data-bistro="forretter">Forretter</button>
-        <button data-bistro="Hovedretter">Hovedretter</button>
-        <button data-bistro="desserter">Desserter</button>
-        <button data-bistro="drikkevarer">Drikkevarer</button>
+    <header>
+        <h1>Menu</h1>
 
-    </nav>
-    <main>
+        <nav>
+            <button data-kategori="alle" class="valgt">Menu</button>
+            <button data-kategori="forretter">Foretter</button>
+            <button data-kategori="hovedretter">Hovedretter</button>
+            <button data-kategori="desserter">Desserter</button>
+            <button data-kategori="drikkevarer">Drikkevarer</button>
+        </nav>
+    </header>
+    <section id="liste">
+    </section>
+    <template>
+        <article>
+            <img src="" alt="" class="billede">
+            <h2 class="navn"></h2>
+            <p class="kortbeskrivelse"></p>
+            <p class="pris"></p>
+        </article>
 
-        <template>
-            <article>
-                <img src="" alt="" class="billede">
-                <h2 class="navn"></h2>
-                <p class="kortbeskrivelse"></p>
-                <p class="pris"></p>
-            </article>
-        </template>
-    </main>
+
+    </template>
 
     <script>
         const header = document.querySelector("header h1");
-        const url = "https://babushka-dd8a.restdb.io/rest/menu";
-        const medieUrl = "https://babushka-dd8a.restdb.io/media/";
+        const medieurl = "https://babushka-dd8a.restdb.io/media/";
+        const myHeaders = {
+            "x-apikey": "600ec2fb1346a1524ff12de4"
+        }
 
-
-
-        const options = {
-            headers: {
-                "x-apikey": "600ec2fb1346a1524ff12de4"
-            }
-        };
-
-
-        let menu;
+        document.addEventListener("DOMContentLoaded", start)
+        let retter;
         let filter = "alle";
 
+        //første funktion der kaldes efter Dom er loaded
 
+        function start() {
+            const filterKnapper = document.querySelectorAll("nav button");
+            filterKnapper.forEach(knap => knap.addEventListener("click", filtrerRetter));
+            loadJSON();
+        }
 
-        const filterKnapper = document.querySelectorAll("nav button");
-        filterKnapper.forEach(knap => knap.addEventListener("click", filtrerMenu));
-
-        function filtrerMenu() {
+        function filtrerRetter() {
             filter = this.dataset.kategori;
-            //            document.querySelector(".valgt").classList.remove("valgt");
-            this.classList.add("valgt");
-
-
-            hentData();
+            document.querySelector(".valgt").classList.remove("valgt");
+            this.classList.add("valgt")
+            visRetter();
             header.textContent = this.textContent;
         }
 
-
-
-
-
-        async function hentData() {
-            const respons = await fetch(url, options);
-            const json = await respons.json();
-            vis(json);
+        async function loadJSON() {
+            const JSONData = await fetch("https://babushka-dd8a.restdb.io/rest/menu", {
+                headers: myHeaders
+            });
+            retter = await JSONData.json();
+            console.log("Retter", retter);
+            visRetter();
         }
 
-        const main = document.querySelector("main");
-        const template = document.querySelector("template").content;
+        function visRetter() {
+            //            console.log("vis");
+            //            console.log(json);
 
-        function vis(json) {
-            console.log(json);
-            main.textContent = "";
-            json.forEach(menu => {
-                if (filter == menu.kategori || filter == "alle") {
-                    const klon = template.cloneNode(true);
-                    klon.querySelector(".billede").src = medieUrl + menu.billede;
-                    klon.querySelector(".navn").textContent = menu.navn;
-                    klon.querySelector(".pris").textContent = pris: ${menu.pris},-;
-                    klon.querySelector(".kortbeskrivelse").textContent = menu.kortbeskrivelse;
-                    main.appendChild(klon);
+            const dest = document.querySelector("#liste");
+            const skabelon = document.querySelector("template").content;
+            dest.textContent = "";
+            retter.forEach(ret => {
+                if (filter == ret.kategori || filter == "alle") {
+                    const klon = skabelon.cloneNode(true);
+                    klon.querySelector(".billede").src = medieurl + ret.billede[0];
+                    klon.querySelector(".navn").textContent = ret.navn;
+                    klon.querySelector(".kortbeskrivelse").textContent = ret.kortbeskrivelse;
+                    klon.querySelector(".pris").textContent = `${"Pris: "}` + ret.pris + `${",-"}`;
+                    dest.appendChild(klon);
                 }
             })
         }
-
-        hentData();
 
     </script>
 </body>
