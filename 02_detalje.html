@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bistro Babushka</title>
+    <link rel="stylesheet" href="">
+</head>
+
+<style>
+
+    img.billede {
+       margin-left: 284px;
+        padding-top: 1rem;
+
+    }
+
+    h2.navn{
+        margin-left: 284px;
+    }
+
+
+    body {
+        background-color: #B79697;
+    }
+
+    button {
+        justify-content: top left;
+    }
+
+    </style>
+
+
+<body>
+    <article class="ret">
+        <img src="" alt="" class="billede">
+        <h2 class="navn"></h2>
+        <p class="kortbeskrivelse"></p>
+        <p class="pris"></p>
+        <button>Tilbage</button>
+    </article>
+
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get("id");
+
+
+        const medieurl = "https://babushka-dd8a.restdb.io/media/";
+        let ret;
+        const myHeaders = {
+            "x-apikey": "600ec2fb1346a1524ff12de4"
+        }
+        console.log("ID", id);
+        document.addEventListener("DOMContentLoaded", loadJSON)
+
+        async function loadJSON() {
+            const JSONData = await fetch(`https://babushka-dd8a.restdb.io/rest/menu/${id}`, {
+                headers: myHeaders
+            });
+            ret = await JSONData.json();
+
+            console.log("retter", ret);
+            visRet(ret);
+        }
+
+
+        function visRet() {
+            document.querySelector(".navn").textContent = ret.navn;
+            document.querySelector(".billede").src = medieurl + ret.billede;
+
+            document.querySelector("button").addEventListener("click", tilbageTilRet);
+        }
+
+        function tilbageTilRet() {
+            history.back();
+        }
+
+    </script>
+</body>
+
+</html>

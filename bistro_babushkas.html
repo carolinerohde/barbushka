@@ -1,33 +1,95 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="da">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title></title>
+    <title>Bistro Babushka</title>
     <link rel="stylesheet" href="">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 </head>
 
 <style>
     img {
         max-width: 100%;
+        border-radius: 10px;
     }
 
     section {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
         grid-gap: 1rem;
+        margin: 20px;
+    }
+
+    nav {
+        display: flex;
+        justify-content: center;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    .ret {
+        border: 10px;
+        border: none;
+        background-color: #B79697;
+        border-radius: 20px;
+        padding: 1rem;
+
+
+    }
+
+    button {
+        color: #900603;
+        background-color: white;
+        text-decoration: none;
+        border: none;
+        margin: 0.5rem;
+        border-radius: 20px;
+        padding: 2px;
+        font-size: 20px;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    button:hover {
+        background: #900603;
+        color: white;
+        border: 2px solid #900603;
+    }
+
+    img.barb {
+        max-width: 100%;
+
+    }
+
+    h1 {
+        font-size: 40px;
+        font-family: 'Open Sans', sans-serif;
+        display: flex;
+        justify-content: center;
+        margin: 20px;
+        color: #62001A;
+    }
+
+
+    h2 {
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    p {
+        font-family: 'Open Sans', sans-serif;
     }
 
 </style>
 
 <body>
     <header>
-        <h1>Menu</h1>
+
+        <img src="barb_billede/b.png" alt="billede" class="barb">
 
         <nav>
-            <button data-kategori="alle" class="valgt">Menu</button>
-            <button data-kategori="forretter">Foretter</button>
+            <button data-kategori="alle" class="valgt">Alle</button>
+            <button data-kategori="forretter">Forretter</button>
             <button data-kategori="hovedretter">Hovedretter</button>
             <button data-kategori="desserter">Desserter</button>
             <button data-kategori="drikkevarer">Drikkevarer</button>
@@ -36,7 +98,8 @@
     <section id="liste">
     </section>
     <template>
-        <article>
+        <article class="ret">
+
             <img src="" alt="" class="billede">
             <h2 class="navn"></h2>
             <p class="kortbeskrivelse"></p>
@@ -96,9 +159,15 @@
                     klon.querySelector(".navn").textContent = ret.navn;
                     klon.querySelector(".kortbeskrivelse").textContent = ret.kortbeskrivelse;
                     klon.querySelector(".pris").textContent = `${"Pris: "}` + ret.pris + `${",-"}`;
+                    klon.querySelector(".ret").addEventListener("click", () => visDetaljer(ret));
+
                     dest.appendChild(klon);
                 }
             })
+        }
+
+        function visDetaljer(hvem) {
+            location.href = `02_detalje.html?id=${hvem._id}`;
         }
 
     </script>
